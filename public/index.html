@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+    <body>
+      <h1> Welcome to Firebase Hosting </h1>
+      <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+        import {getAuth} from "firebase/auth";
+        import {getFirestore} from "firebase/firestore";
+        import {getFunctions} from "firebase/functions";
+
+         // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyCSjIZJCfYJdRy3Koq1bmtab-xNqFarnrc",
+          authDomain: "aethergamelobby.firebaseapp.com",
+          projectId: "aethergamelobby",
+          storageBucket: "aethergamelobby.appspot.com",
+          messagingSenderId: "939939023407",
+          appId: "1:939939023407:web:6b4757f412c5ed3d2cd4da"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const functions = getFunctions(app);
+        
+      </script>
+
+      <script src="/__/firebase/init.js"></script>
+  </body>
+</html>
