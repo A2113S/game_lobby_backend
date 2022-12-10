@@ -3,6 +3,9 @@ const admin = require("firebase-admin");
 
 admin.initializeApp();
 
+const defaultImage =
+  "https://miro.medium.com/max/250/1*DSNfSDcOe33E2Aup1Sww2w.jpeg";
+
 // export const helloWorld = functions.https.onRequest((request, response) => {
 //   response.set("Access-Control-Allow-Origin", "http://localhost:3000");
 //   response.set("Access-Control-Allow-Methods", "GET");
@@ -84,6 +87,63 @@ exports.resetColors = functions.https.onRequest(
         response.set("Access-Control-Allow-Origin", "http://localhost:3000");
         response.set("Access-Control-Allow-Methods", "POST, GET");
         response.send("colors reset");
+      });
+  }
+);
+
+// get the image of all players in order from the database in collection users
+exports.getImages = functions.https.onRequest((request: any, response: any) => {
+  admin
+    .firestore()
+    .collection("users")
+    .get()
+    .then((snapshot: any) => {
+      response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+      // we want to PUT the color in the database
+      response.set("Access-Control-Allow-Methods", "GET");
+      response.send(snapshot.docs.map((doc: any) => doc.data().image));
+    });
+});
+
+// store the image of the player in the database in collection users
+exports.storeImage = functions.https.onRequest(
+  (request: any, response: any) => {
+    const image = request.query.image;
+    const uid = request.query.uid;
+
+    admin
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .update({
+        image: image,
+      })
+      .then(() => {
+        response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.set("Access-Control-Allow-Methods", "POST, GET");
+        response.send("image stored");
+      });
+  }
+);
+
+// reset all images of all players in the database in collection users
+exports.resetImages = functions.https.onRequest(
+  (request: any, response: any) => {
+    admin
+      .firestore()
+      .collection("users")
+      .get()
+      .then((snapshot: any) => {
+        snapshot.docs.forEach((doc: any) => {
+          doc.ref.update({
+            image: defaultImage,
+          });
+        });
+      })
+      .then(() => {
+        response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.set("Access-Control-Allow-Methods", "POST, GET");
+        response.send("images reset");
       });
   }
 );
