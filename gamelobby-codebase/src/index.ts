@@ -25,7 +25,10 @@ exports.getColor = functions.https.onRequest((request: any, response: any) => {
     .doc(uid)
     .get()
     .then((snapshot: any) => {
-      response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+      response.set(
+        "Access-Control-Allow-Origin",
+        "https://aethergamelobby.web.app"
+      );
       // we want to PUT the color in the database
       response.set("Access-Control-Allow-Methods", "GET");
       response.send(snapshot.data().color);
@@ -40,7 +43,10 @@ exports.getAllColors = functions.https.onRequest(
       .collection("users")
       .get()
       .then((snapshot: any) => {
-        response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.set(
+          "Access-Control-Allow-Origin",
+          "https://aethergamelobby.web.app"
+        );
         // we want to PUT the color in the database
         response.set("Access-Control-Allow-Methods", "GET");
         response.send(snapshot.docs.map((doc: any) => doc.data().color));
@@ -62,7 +68,10 @@ exports.storeColor = functions.https.onRequest(
         color: color,
       })
       .then(() => {
-        response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.set(
+          "Access-Control-Allow-Origin",
+          "https://aethergamelobby.web.app"
+        );
         response.set("Access-Control-Allow-Methods", "POST, GET");
         response.send("color stored");
       });
@@ -84,7 +93,10 @@ exports.resetColors = functions.https.onRequest(
         });
       })
       .then(() => {
-        response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.set(
+          "Access-Control-Allow-Origin",
+          "https://aethergamelobby.web.app"
+        );
         response.set("Access-Control-Allow-Methods", "POST, GET");
         response.send("colors reset");
       });
@@ -98,7 +110,10 @@ exports.getImages = functions.https.onRequest((request: any, response: any) => {
     .collection("users")
     .get()
     .then((snapshot: any) => {
-      response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+      response.set(
+        "Access-Control-Allow-Origin",
+        "https://aethergamelobby.web.app"
+      );
       // we want to PUT the color in the database
       response.set("Access-Control-Allow-Methods", "GET");
       response.send(snapshot.docs.map((doc: any) => doc.data().image));
@@ -119,7 +134,10 @@ exports.storeImage = functions.https.onRequest(
         image: image,
       })
       .then(() => {
-        response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.set(
+          "Access-Control-Allow-Origin",
+          "https://aethergamelobby.web.app"
+        );
         response.set("Access-Control-Allow-Methods", "POST, GET");
         response.send("image stored");
       });
@@ -141,7 +159,10 @@ exports.resetImages = functions.https.onRequest(
         });
       })
       .then(() => {
-        response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.set(
+          "Access-Control-Allow-Origin",
+          "https://aethergamelobby.web.app"
+        );
         response.set("Access-Control-Allow-Methods", "POST, GET");
         response.send("images reset");
       });
