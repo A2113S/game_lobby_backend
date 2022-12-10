@@ -1,69 +1,89 @@
-import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
 
-// // Start writing functions
-// // https://firebase.google.com/docs/functions/typescript
-//
+admin.initializeApp();
+
 // export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
+//   response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+//   response.set("Access-Control-Allow-Methods", "GET");
 //   response.send("Hello from Firebase!");
 // });
 
+// get the color of the player from the database in collection users
+exports.getColor = functions.https.onRequest((request: any, response: any) => {
+  // get the uid from the param query
+  // for example, if function url is https://us-central1-aethergamelobby.cloudfunctions.net/getColor
+  // then the url will be https://us-central1-aethergamelobby.cloudfunctions.net/getColor?uid=123456789
 
-export const helloWorld = functions.https.onRequest((request, response) => {
-  response.send("Hello from Firebase!");
-});
-
-// store the color of the player in the database
-export const storeColor = functions.https.onRequest((request, response) => {
-  const color = request.body.color;
-  const uid = request.body.uid;
+  const uid = request.query.uid;
   admin
-    .database()
-    .ref("users/" + uid + "/color")
-    .set(color)
-    .then(() => {
-      response.send("color stored");
+    .firestore()
+    .collection("users")
+    .doc(uid)
+    .get()
+    .then((snapshot: any) => {
+      response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+      // we want to PUT the color in the database
+      response.set("Access-Control-Allow-Methods", "GET");
+      response.send(snapshot.data().color);
     });
 });
 
-// get the color of the player from the database
-export const getColor = functions.https.onRequest((request, response) => {
-  const uid = request.body.uid;
-  admin
-    .database()
-    .ref("users/" + uid + "/color")
-    .once("value")
-    .then((snapshot) => {
-      response.send(snapshot.val());
-    });
-});
-
-// store player profile picture in the database
-export const storeProfilePicture = functions.https.onRequest(
-  (request, response) => {
-    const profilePicture = request.body.profilePicture;
-    const uid = request.body.uid;
+// get all the colors of the players from the database in collection users
+exports.getAllColors = functions.https.onRequest(
+  (request: any, response: any) => {
     admin
-      .database()
-      .ref("users/" + uid + "/profilePicture")
-      .set(profilePicture)
-      .then(() => {
-        response.send("profile picture stored");
+      .firestore()
+      .collection("users")
+      .get()
+      .then((snapshot: any) => {
+        response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        // we want to PUT the color in the database
+        response.set("Access-Control-Allow-Methods", "GET");
+        response.send(snapshot.docs.map((doc: any) => doc.data().color));
       });
   }
 );
 
-// get player profile picture from the database
-export const getProfilePicture = functions.https.onRequest(
-  (request, response) => {
-    const uid = request.body.uid;
+// store the color of the player in the database in collection users
+exports.storeColor = functions.https.onRequest(
+  (request: any, response: any) => {
+    const color = request.query.color;
+    const uid = request.query.uid;
+
     admin
-      .database()
-      .ref("users/" + uid + "/profilePicture")
-      .once("value")
-      .then((snapshot) => {
-        response.send(snapshot.val());
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .update({
+        color: color,
+      })
+      .then(() => {
+        response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.set("Access-Control-Allow-Methods", "POST, GET");
+        response.send("color stored");
+      });
+  }
+);
+
+// reset colors of all players in the database in collection users
+exports.resetColors = functions.https.onRequest(
+  (request: any, response: any) => {
+    admin
+      .firestore()
+      .collection("users")
+      .get()
+      .then((snapshot: any) => {
+        snapshot.docs.forEach((doc: any) => {
+          doc.ref.update({
+            color: "",
+          });
+        });
+      })
+      .then(() => {
+        response.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.set("Access-Control-Allow-Methods", "POST, GET");
+        response.send("colors reset");
       });
   }
 );
